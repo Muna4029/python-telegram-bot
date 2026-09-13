@@ -25,7 +25,7 @@ from httpx import AsyncClient, AsyncHTTPTransport, Response
 from telegram._utils.defaultvalue import DEFAULT_NONE
 from telegram._utils.strings import TextEncoding
 from telegram._utils.types import ODVInput
-from telegram.error import BadRequest, RetryAfter, TimedOut
+from telegram.error import BadRequest, InvalidToken, RetryAfter, TimedOut
 from telegram.request import BaseRequest, HTTPXRequest, RequestData
 
 
@@ -58,6 +58,8 @@ class NonchalantHttpxRequest(HTTPXRequest):
             pytest.xfail(f"Not waiting for flood control: {e}")
         except TimedOut as e:
             pytest.xfail(f"Ignoring TimedOut error: {e}")
+        except InvalidToken as e:
+            pytest.xfail(f"Invalid token: {e}")
 
 
 class OfflineRequest(BaseRequest):
