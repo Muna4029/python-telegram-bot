@@ -52,6 +52,9 @@ if GITHUB_ACTIONS and BOTS is not None and JOB_INDEX is not None:
 
 FALLBACKS = json.loads(base64.b64decode(FALLBACKS).decode(TextEncoding.UTF_8))  # type: list[dict[str, str]]
 
+# Support for TG_BOT_TOKEN environment variable to override fallback tokens
+TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN", None)
+
 
 class BotInfoProvider:
     def __init__(self):
@@ -65,6 +68,10 @@ class BotInfoProvider:
                 return BOTS[JOB_INDEX][key]
             except (IndexError, KeyError):
                 pass
+
+        # If TG_BOT_TOKEN is set, use it instead of fallback
+        if TG_BOT_TOKEN is not None and key == "token":
+            return TG_BOT_TOKEN
 
         # Otherwise go with the fallback
         return fallback
