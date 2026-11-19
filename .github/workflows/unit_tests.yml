@@ -76,22 +76,34 @@ jobs:
 
         shell: bash --noprofile --norc {0}
 
-      # Minimal fix: check whether both reports exist.
+      # Check which JUnit XML reports were generated.
       - name: Check test reports
         id: check_reports
         if: always()
         shell: bash
         run: |
-          if [ -f .test_report_no_optionals_junit.xml ] && \
-             [ -f .test_report_optionals_junit.xml ]; then
+          reports=()
 
+          for report in \
+            .test_report_no_optionals_junit.xml \
+            .test_report_optionals_junit.xml; do
+            if [ -f "$report" ]; then
+              reports+=("$report")
+            else
+              echo "Missing test report: $report"
+            fi
+          done
+
+          if [ ${#reports[@]} -gt 0 ]; then
             echo "reports_exist=true" >> "$GITHUB_OUTPUT"
 
+            {
+              echo "report_paths<<EOF"
+              printf '%s\n' "${reports[@]}"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
           else
             echo "reports_exist=false" >> "$GITHUB_OUTPUT"
-            echo "One or more JUnit XML reports are missing."
-
-            ls -la .test_report* 2>/dev/null || true
           fi
 
       - name: Test Summary
@@ -99,6 +111,4 @@ jobs:
         if: ${{ always() && steps.check_reports.outputs.reports_exist == 'true' }}
         uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
         with:
-          paths: |
-            .test_report_no_optionals_junit.xml
-            .test_report_optionals_junit.xml
+          paths: ${{ steps.check_reports.outputs.report_paths }}
