@@ -15,9 +15,9 @@ jobs:
         python-version:
           - '3.10'
           - '3.13'
-          - '3.14.0-beta.3'
+          - '3.14'
         os:
-          - ubuntu-latest
+          - ubuntu-24.04
 
     steps:
       - name: Checkout repository
@@ -44,18 +44,18 @@ jobs:
 
           TO_TEST="test_no_passport.py or test_datetime.py or test_defaults.py or test_jobqueue.py or test_applicationbuilder.py or test_ratelimiter.py or test_updater.py or test_callbackdatacache.py or test_request.py"
 
-          pytest -v --cov -k "${TO_TEST}"
+          pytest -v -ra --cov -k "${TO_TEST}"
 
           opt_dep_status=$?
 
           # Run the full test suite with optional dependencies.
           export TEST_WITH_OPT_DEPS='true'
 
-          pip install .[all]
+          pip install '.[all]'
           install_status=$?
 
           if [ "$install_status" -eq 0 ]; then
-            pytest -v --cov --cov-append \
+            pytest -v -ra --cov --cov-append \
               -n auto --dist worksteal
 
             main_status=$?
