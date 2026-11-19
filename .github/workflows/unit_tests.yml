@@ -44,8 +44,7 @@ jobs:
 
           TO_TEST="test_no_passport.py or test_datetime.py or test_defaults.py or test_jobqueue.py or test_applicationbuilder.py or test_ratelimiter.py or test_updater.py or test_callbackdatacache.py or test_request.py"
 
-          pytest -v --cov -k "${TO_TEST}" \
-            --junit-xml=.test_report_no_optionals_junit.xml
+          pytest -v --cov -k "${TO_TEST}"
 
           opt_dep_status=$?
 
@@ -57,8 +56,7 @@ jobs:
 
           if [ "$install_status" -eq 0 ]; then
             pytest -v --cov --cov-append \
-              -n auto --dist worksteal \
-              --junit-xml=.test_report_optionals_junit.xml
+              -n auto --dist worksteal
 
             main_status=$?
           else
@@ -70,45 +68,7 @@ jobs:
 
         env:
           JOB_INDEX: ${{ strategy.job-index }}
-          BOTS: ${{ secrets.BOTS }}
           TEST_WITH_OPT_DEPS: 'false'
           TEST_BUILD: 'true'
 
         shell: bash --noprofile --norc {0}
-
-      # Check which JUnit XML reports were generated.
-      - name: Check test reports
-        id: check_reports
-        if: always()
-        shell: bash
-        run: |
-          reports=()
-
-          for report in \
-            .test_report_no_optionals_junit.xml \
-            .test_report_optionals_junit.xml; do
-            if [ -f "$report" ]; then
-              reports+=("$report")
-            else
-              echo "Missing test report: $report"
-            fi
-          done
-
-          if [ ${#reports[@]} -gt 0 ]; then
-            echo "reports_exist=true" >> "$GITHUB_OUTPUT"
-
-            {
-              echo "report_paths<<EOF"
-              printf '%s\n' "${reports[@]}"
-              echo "EOF"
-            } >> "$GITHUB_OUTPUT"
-          else
-            echo "reports_exist=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Test Summary
-        id: test_summary
-        if: ${{ always() && steps.check_reports.outputs.reports_exist == 'true' }}
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86
-        with:
-          paths: ${{ steps.check_reports.outputs.report_paths }}
