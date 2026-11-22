@@ -20,7 +20,7 @@ jobs:
       IS_RELEASE_PR: ${{ steps.check_title.outputs.IS_RELEASE_PR }}
 
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           # needed for commit and push step at the end
           persist-credentials: true
@@ -36,8 +36,11 @@ jobs:
           fi
 
       # Create the new fragment
-      - uses: Bibo-Joshi/chango@9d6bd9d7612eca5fab2c5161687011be59baaf19 # 0.4.0
+      - uses: Bibo-Joshi/chango@bc58df46ef3ba8f15b8d744929998b7ae8a222d4 # 0.6.1
         with:
+          # passing this custom token has two purposes
+          # 1. it allows us to fetch info about issue types
+          # 2. it ensures that the push will also re-trigger workflows
           github-token: ${{ secrets.CHANGO_PAT }}
           query-issue-types: true
           commit-and-push: ${{ steps.check_title.outputs.COMMIT_AND_PUSH }}
@@ -45,22 +48,30 @@ jobs:
       # Run `chango release` if applicable - needs some additional setup.
       - name: Set up Python
         if: steps.check_title.outputs.IS_RELEASE_PR == 'true'
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: "3.x"
 
       - name: Do Release
         if: steps.check_title.outputs.IS_RELEASE_PR == 'true'
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           cd ./target-repo
-          git add changes/unreleased/*
+          # chango only checks `unreleased` for existing fragments - drop duplicates of this PR
+          # if it was already released, otherwise every push re-triggers a new release commit
+          if find changes -mindepth 2 -maxdepth 2 -name "${PR_NUMBER}.*.toml" -not -path "changes/unreleased/*" | grep -q .; then
+            echo "PR #${PR_NUMBER} already has a released fragment. Dropping new unreleased ones."
+            find changes/unreleased -maxdepth 1 -name "${PR_NUMBER}.*.toml" -exec git rm -f --quiet -- {} +
+          fi
+          git add --all changes/
           pip install . --group docs
           VERSION_TAG=$(python -c "from telegram import __version__; print(f'{__version__}')")
           chango release --uid $VERSION_TAG
 
       - name: Commit & Push
         if: steps.check_title.outputs.IS_RELEASE_PR == 'true'
-        uses: stefanzweifel/git-auto-commit-action@778341af668090896ca464160c2def5d1d1a3eb0 # v6.0.1
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
         with:
           commit_message: "Do chango Release"
           repository: ./target-repo
