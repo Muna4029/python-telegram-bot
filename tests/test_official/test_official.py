@@ -63,7 +63,16 @@ def test_check_method(tg_method: TelegramMethod) -> None:
     - No unexpected parameters
     - Extra parameters should be keyword only
     """
-    ptb_method: FunctionType | None = getattr(telegram.Bot, tg_method.method_name, None)
+    # Some official API method names are camelCase while PTB uses snake_case.
+    # Try both the official name and a snake_case variant.
+    import re
+
+    raw_name = tg_method.method_name
+    snake_name = re.sub(r"(?<!^)(?=[A-Z])", "_", raw_name).lower()
+
+    ptb_method: FunctionType | None = getattr(telegram.Bot, raw_name, None) or getattr(
+        telegram.Bot, snake_name, None
+    )
     assert ptb_method, f"Method {tg_method.method_name} not found in telegram.Bot"
 
     # Check arguments based on source
@@ -137,7 +146,8 @@ def test_check_object(tg_class: TelegramClass) -> None:
     - Parameter default value correctness
     - No unexpected parameters
     """
-    obj = getattr(telegram, tg_class.class_name)
+    obj = getattr(telegram, tg_class.class_name, None)
+    assert obj is not None, f"Class {tg_class.class_name} not found in telegram"
 
     # Check arguments based on source. Makes sure to only check __init__'s signature & nothing else
     sig = inspect.signature(obj.__init__, follow_wrapped=True)

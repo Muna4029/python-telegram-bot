@@ -95,7 +95,10 @@ from telegram._update import Update
 from telegram._user import User
 from telegram._userprofilephotos import UserProfilePhotos
 from telegram._utils.argumentparsing import parse_lpo_and_dwpp, parse_sequence_arg
-from telegram._utils.defaultvalue import DEFAULT_NONE, DefaultValue
+from telegram._utils.defaultvalue import (
+    DEFAULT_NONE,
+    DefaultValue,
+)
 from telegram._utils.files import is_local_file, parse_file_input
 from telegram._utils.logging import get_logger
 from telegram._utils.repr import build_repr_with_selected_attrs
@@ -2642,6 +2645,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
         business_connection_id: Optional[str] = None,
         message_effect_id: Optional[str] = None,
         allow_paid_broadcast: Optional[bool] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         allow_sending_without_reply: ODVInput[bool] = DEFAULT_NONE,
         reply_to_message_id: Optional[int] = None,
@@ -2698,6 +2702,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
             allow_paid_broadcast (:obj:`bool`, optional): |allow_paid_broadcast|
 
                 .. versionadded:: 21.7
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
         Keyword Args:
             allow_sending_without_reply (:obj:`bool`, optional): |allow_sending_without_reply|
@@ -2793,6 +2798,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
             "business_connection_id": business_connection_id,
             "message_effect_id": message_effect_id,
             "allow_paid_broadcast": allow_paid_broadcast,
+            "direct_messages_topic_id": direct_messages_topic_id,
         }
 
         result = await self._post(
@@ -3148,6 +3154,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
         business_connection_id: Optional[str] = None,
         message_effect_id: Optional[str] = None,
         allow_paid_broadcast: Optional[bool] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         allow_sending_without_reply: ODVInput[bool] = DEFAULT_NONE,
         reply_to_message_id: Optional[int] = None,
@@ -3206,6 +3213,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
             allow_paid_broadcast (:obj:`bool`, optional): |allow_paid_broadcast|
 
                 .. versionadded:: 21.7
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
         Keyword Args:
             allow_sending_without_reply (:obj:`bool`, optional): |allow_sending_without_reply|
@@ -3268,6 +3276,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
             "foursquare_type": foursquare_type,
             "google_place_id": google_place_id,
             "google_place_type": google_place_type,
+            "direct_messages_topic_id": direct_messages_topic_id,
         }
 
         return await self._send_message(
@@ -3288,6 +3297,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
             business_connection_id=business_connection_id,
             message_effect_id=message_effect_id,
             allow_paid_broadcast=allow_paid_broadcast,
+            direct_messages_topic_id=direct_messages_topic_id,
         )
 
     async def send_contact(
@@ -3305,6 +3315,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
         business_connection_id: Optional[str] = None,
         message_effect_id: Optional[str] = None,
         allow_paid_broadcast: Optional[bool] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         allow_sending_without_reply: ODVInput[bool] = DEFAULT_NONE,
         reply_to_message_id: Optional[int] = None,
@@ -3353,6 +3364,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
             allow_paid_broadcast (:obj:`bool`, optional): |allow_paid_broadcast|
 
                 .. versionadded:: 21.7
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
         Keyword Args:
             allow_sending_without_reply (:obj:`bool`, optional): |allow_sending_without_reply|
@@ -3406,6 +3418,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
             "first_name": first_name,
             "last_name": last_name,
             "vcard": vcard,
+            "direct_messages_topic_id": direct_messages_topic_id,
         }
 
         return await self._send_message(
@@ -3426,6 +3439,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
             business_connection_id=business_connection_id,
             message_effect_id=message_effect_id,
             allow_paid_broadcast=allow_paid_broadcast,
+            direct_messages_topic_id=direct_messages_topic_id,
         )
 
     async def send_game(
@@ -4212,6 +4226,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
         entities: Optional[Sequence["MessageEntity"]] = None,
         link_preview_options: ODVInput["LinkPreviewOptions"] = DEFAULT_NONE,
         business_connection_id: Optional[str] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         disable_web_page_preview: Optional[bool] = None,
         read_timeout: ODVInput[float] = DEFAULT_NONE,
@@ -4259,6 +4274,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
             business_connection_id (:obj:`str`, optional): |business_id_str_edit|
 
                 .. versionadded:: 21.4
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
         Keyword Args:
             disable_web_page_preview (:obj:`bool`, optional): Disables link previews for links in
@@ -4290,6 +4306,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
             "message_id": message_id,
             "inline_message_id": inline_message_id,
             "entities": entities,
+            "direct_messages_topic_id": direct_messages_topic_id,
         }
 
         link_preview_options = parse_lpo_and_dwpp(disable_web_page_preview, link_preview_options)
@@ -4306,6 +4323,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
             connect_timeout=connect_timeout,
             pool_timeout=pool_timeout,
             api_kwargs=api_kwargs,
+            direct_messages_topic_id=direct_messages_topic_id,
         )
 
     async def edit_message_caption(
@@ -5231,6 +5249,7 @@ class Bot(TelegramObject, contextlib.AbstractAsyncContextManager["Bot"]):
         reply_parameters: Optional["ReplyParameters"] = None,
         message_effect_id: Optional[str] = None,
         allow_paid_broadcast: Optional[bool] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         allow_sending_without_reply: ODVInput[bool] = DEFAULT_NONE,
         reply_to_message_id: Optional[int] = None,
@@ -7569,6 +7588,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
         message_effect_id: Optional[str] = None,
         reply_parameters: Optional["ReplyParameters"] = None,
         reply_markup: Optional["InlineKeyboardMarkup"] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         allow_sending_without_reply: ODVInput[bool] = DEFAULT_NONE,
         reply_to_message_id: Optional[int] = None,
@@ -7600,6 +7620,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
                 |reply_parameters|
             reply_markup (:class:`telegram.InlineKeyboardMarkup`, optional):
                 An object for an inline keyboard
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
         Keyword Args:
             allow_sending_without_reply (:obj:`bool`, optional): |allow_sending_without_reply|
@@ -7619,6 +7640,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
         data: JSONDict = {
             "chat_id": chat_id,
             "checklist": checklist,
+            "direct_messages_topic_id": direct_messages_topic_id,
         }
 
         return await self._send_message(
@@ -7637,6 +7659,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
             connect_timeout=connect_timeout,
             pool_timeout=pool_timeout,
             api_kwargs=api_kwargs,
+            direct_messages_topic_id=direct_messages_topic_id,
         )
 
     async def edit_message_checklist(
@@ -7646,6 +7669,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
         message_id: int,
         checklist: InputChecklist,
         reply_markup: Optional["InlineKeyboardMarkup"] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         read_timeout: ODVInput[float] = DEFAULT_NONE,
         write_timeout: ODVInput[float] = DEFAULT_NONE,
@@ -7669,6 +7693,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
                 The new checklist.
             reply_markup (:class:`telegram.InlineKeyboardMarkup`, optional):
                 An object for the new inline keyboard for the message.
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
         Returns:
             :class:`telegram.Message`: On success, the sent Message is returned.
@@ -7681,6 +7706,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
             "chat_id": chat_id,
             "message_id": message_id,
             "checklist": checklist,
+            "direct_messages_topic_id": direct_messages_topic_id,
         }
 
         return await self._send_message(
@@ -7693,6 +7719,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
             connect_timeout=connect_timeout,
             pool_timeout=pool_timeout,
             api_kwargs=api_kwargs,
+            direct_messages_topic_id=direct_messages_topic_id,
         )
 
     async def send_dice(
@@ -7707,6 +7734,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
         business_connection_id: Optional[str] = None,
         message_effect_id: Optional[str] = None,
         allow_paid_broadcast: Optional[bool] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         allow_sending_without_reply: ODVInput[bool] = DEFAULT_NONE,
         reply_to_message_id: Optional[int] = None,
@@ -7759,6 +7787,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
             allow_paid_broadcast (:obj:`bool`, optional): |allow_paid_broadcast|
 
                 .. versionadded:: 21.7
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
         Keyword Args:
             allow_sending_without_reply (:obj:`bool`, optional): |allow_sending_without_reply|
@@ -7788,7 +7817,11 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
             :class:`telegram.error.TelegramError`
 
         """
-        data: JSONDict = {"chat_id": chat_id, "emoji": emoji}
+        data: JSONDict = {
+            "chat_id": chat_id,
+            "emoji": emoji,
+            "direct_messages_topic_id": direct_messages_topic_id,
+        }
 
         return await self._send_message(
             "sendDice",
@@ -7808,6 +7841,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
             business_connection_id=business_connection_id,
             message_effect_id=message_effect_id,
             allow_paid_broadcast=allow_paid_broadcast,
+            direct_messages_topic_id=direct_messages_topic_id,
         )
 
     async def get_my_default_administrator_rights(
@@ -8140,6 +8174,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
         show_caption_above_media: Optional[bool] = None,
         allow_paid_broadcast: Optional[bool] = None,
         video_start_timestamp: Optional[int] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         allow_sending_without_reply: ODVInput[bool] = DEFAULT_NONE,
         reply_to_message_id: Optional[int] = None,
@@ -8194,6 +8229,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
             allow_paid_broadcast (:obj:`bool`, optional): |allow_paid_broadcast|
 
                 .. versionadded:: 21.7
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
         Keyword Args:
             allow_sending_without_reply (:obj:`bool`, optional): |allow_sending_without_reply|
@@ -8254,6 +8290,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
             "show_caption_above_media": show_caption_above_media,
             "allow_paid_broadcast": allow_paid_broadcast,
             "video_start_timestamp": video_start_timestamp,
+            "direct_messages_topic_id": direct_messages_topic_id,
         }
 
         result = await self._post(
@@ -8276,6 +8313,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
         protect_content: ODVInput[bool] = DEFAULT_NONE,
         message_thread_id: Optional[int] = None,
         remove_caption: Optional[bool] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         read_timeout: ODVInput[float] = DEFAULT_NONE,
         write_timeout: ODVInput[float] = DEFAULT_NONE,
@@ -8308,6 +8346,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
             message_thread_id (:obj:`int`, optional): |message_thread_id_arg|
             remove_caption (:obj:`bool`, optional): Pass :obj:`True` to copy the messages without
                 their captions.
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
         Returns:
             tuple[:class:`telegram.MessageId`]: On success, a tuple of :class:`~telegram.MessageId`
@@ -8325,6 +8364,7 @@ CUSTOM_EMOJI_IDENTIFIER_LIMIT` custom emoji identifiers can be specified.
             "protect_content": protect_content,
             "message_thread_id": message_thread_id,
             "remove_caption": remove_caption,
+            "direct_messages_topic_id": direct_messages_topic_id,
         }
 
         result = await self._post(
@@ -9854,6 +9894,7 @@ CHAT_ACTIVITY_TIMEOUT` seconds.
         areas: Optional[Sequence["StoryArea"]] = None,
         post_to_chat_page: Optional[bool] = None,
         protect_content: ODVInput[bool] = DEFAULT_NONE,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         read_timeout: ODVInput[float] = DEFAULT_NONE,
         write_timeout: ODVInput[float] = DEFAULT_NONE,
@@ -9904,6 +9945,7 @@ MAX_UNIQUE_GIFT_AREAS` of :class:`telegram.StoryAreaTypeUniqueGift`.
                 keep the story accessible after it expires.
             protect_content (:obj:`bool`, optional): Pass :obj:`True` if the content of the story
                 must be protected from forwarding and screenshotting
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
         Returns:
             :class:`Story`
@@ -9921,6 +9963,7 @@ MAX_UNIQUE_GIFT_AREAS` of :class:`telegram.StoryAreaTypeUniqueGift`.
             "areas": areas,
             "post_to_chat_page": post_to_chat_page,
             "protect_content": protect_content,
+            "direct_messages_topic_id": direct_messages_topic_id,
         }
         return Story.de_json(
             await self._post(
@@ -10827,6 +10870,7 @@ CHAT_ACTIVITY_TIMEOUT` seconds.
         subscription_period: TimePeriod,
         subscription_price: int,
         name: Optional[str] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         read_timeout: ODVInput[float] = DEFAULT_NONE,
         write_timeout: ODVInput[float] = DEFAULT_NONE,
@@ -10858,6 +10902,7 @@ CHAT_ACTIVITY_TIMEOUT` seconds.
                 :tg-const:`telegram.constants.ChatSubscriptionLimit.MAX_PRICE`.
             name (:obj:`str`, optional): Invite link name;
                 0-:tg-const:`telegram.constants.ChatInviteLinkLimit.NAME_LENGTH` characters.
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
         Returns:
             :class:`telegram.ChatInviteLink`
@@ -10871,6 +10916,7 @@ CHAT_ACTIVITY_TIMEOUT` seconds.
             "subscription_period": subscription_period,
             "subscription_price": subscription_price,
             "name": name,
+            "direct_messages_topic_id": direct_messages_topic_id,
         }
 
         result = await self._post(
@@ -10890,6 +10936,7 @@ CHAT_ACTIVITY_TIMEOUT` seconds.
         chat_id: Union[str, int],
         invite_link: Union[str, "ChatInviteLink"],
         name: Optional[str] = None,
+        direct_messages_topic_id: Optional[int] = None,
         *,
         read_timeout: ODVInput[float] = DEFAULT_NONE,
         write_timeout: ODVInput[float] = DEFAULT_NONE,
@@ -10908,6 +10955,7 @@ CHAT_ACTIVITY_TIMEOUT` seconds.
             invite_link (:obj:`str` | :obj:`telegram.ChatInviteLink`): The invite link to edit.
             name (:obj:`str`, optional): Invite link name;
                 0-:tg-const:`telegram.constants.ChatInviteLinkLimit.NAME_LENGTH` characters.
+            direct_messages_topic_id (:obj:`int`, optional): Direct Messages topic id
 
                 Tip:
                     Omitting this argument removes the name of the invite link.
@@ -10924,6 +10972,7 @@ CHAT_ACTIVITY_TIMEOUT` seconds.
             "chat_id": chat_id,
             "invite_link": link,
             "name": name,
+            "direct_messages_topic_id": direct_messages_topic_id,
         }
 
         result = await self._post(
